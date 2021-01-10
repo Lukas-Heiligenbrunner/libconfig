@@ -14,5 +14,5 @@ jobs:
       # build project
       - name: mkdir
         run: mkdir build
-      - name: build package
+      - name: build conan package
         run: conan create .
