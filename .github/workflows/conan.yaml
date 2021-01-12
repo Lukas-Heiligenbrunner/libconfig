@@ -1,16 +1,23 @@
 name: build conan package
-on: push
+on:
+  pull_request:
+  push:
+  release:
 jobs:
   build_conan:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
       # install dependencies
-      - name: dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -yq python3 python3-pip python3-setuptools build-essential cmake make
-          sudo pip3 install conan
+      - name: install conan
+        run: pip3 install conan
       # build project
       - name: build conan package
         run: |
